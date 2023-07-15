@@ -1,5 +1,6 @@
 package dev.practice.api.service;
 
+import dev.practice.api.repository.CouponCountRepository;
 import dev.practice.api.repository.CouponRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -12,25 +13,28 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
-class ApplyServiceTest {
+class ApplyServiceWithRedisTest {
 
     @Autowired
-    private ApplyService applyService;
+    private ApplyServiceWithRedis applyServiceWithRedis;
 
     @Autowired
     private CouponRepository couponRepository;
 
+    @Autowired
+    private CouponCountRepository couponCountRepository;
+
     @BeforeEach
     void setUp() {
         couponRepository.deleteAll();
+        couponCountRepository.reset();
     }
 
     @AfterEach
     void tearDown() {
         couponRepository.deleteAll();
+        couponCountRepository.reset();
     }
 
     // 기본 기능 Test, Local 테스트
@@ -40,7 +44,7 @@ class ApplyServiceTest {
         long userId = 1L;
 
         //when
-        applyService.applyCoupon(userId);
+        applyServiceWithRedis.applyCoupon(userId);
 
         //then
         long count = couponRepository.count();
@@ -48,9 +52,7 @@ class ApplyServiceTest {
     }
 
     /**
-     * count 에 대한 race condition test 이다.
-     *
-     * 동일한 userId 에 대한 race condition 은 해당 프로젝트에서 다루지 않는다.
+     * count 에 대한 race condition 해결
      */
     @Test
     void concurrencyTest() throws InterruptedException {
@@ -64,7 +66,7 @@ class ApplyServiceTest {
             long userId = i;
             executorService.submit(() -> {
                 try {
-                    applyService.applyCoupon(userId);
+                    applyServiceWithRedis.applyCoupon(userId);
                 }finally {
                     countDownLatch.countDown();
                 }
@@ -75,8 +77,6 @@ class ApplyServiceTest {
 
         long count = couponRepository.count();
 
-        Assertions.assertThatThrownBy(
-                () -> Assertions.assertThat(count).isEqualTo(100L)
-        ).isInstanceOf(AssertionError.class); // 100 개를 초과하는 쿠폰이 발급된다.
+        Assertions.assertThat(count).isEqualTo(100L);
     }
 }

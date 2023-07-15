@@ -23,6 +23,11 @@ public class ApplyService {
          * -> 해당 프로젝트에서는 다루지 않을 것이다.
          * 2. 동시에 쿠폰 발급이 대규모로 요청되면 100 개를 초과하는 쿠폰이 발급될 수 있다.
          * -> 해결해보자
+         *
+         * 2번 해결
+         * - 쿠폰 갯수 조회에 대해서 race condition 을 해결하면된다.
+         * - 이는 쿠폰 발급과는 관련이 없다는 것이다. 저장 로직은 락을 걸지 않는다.
+         * - ApplyServiceWithRedis.java 를 참고하자
          */
 
         long count = couponRepository.count();
