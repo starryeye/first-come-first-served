@@ -20,6 +20,11 @@ public class CouponCountRepository {
                 .increment("coupon:count");
     }
 
+    /**
+     * 수동 데이터 초기화
+     * docker exec -it my-redis redis-cli
+     * flushall
+     */
     public void reset() {
         stringRedisTemplate.delete("coupon:count");
     }
