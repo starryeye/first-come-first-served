@@ -10,6 +10,11 @@
 # 4. 토픽 삭제
 # docker exec -it coupon-kafka kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic testTopic
 
+# coupon-create topic 생성
+# docker exec -it coupon-kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic coupon-create
+# consumer 로 확인
+# docker exec -it coupon-kafka kafka-console-consumer.sh --topic coupon-create --bootstrap-server localhost:9092 --key-deserializer "org.apache.kafka.common.serialization.StringDeserializer" --value-deserializer "org.apache.kafka.common.serialization.LongDeserializer"
+
 
 version: '2'
 
@@ -28,6 +33,7 @@ services:
       - "9092:9092"
     environment:
       ALLOW_PLAINTEXT_LISTENER: yes
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
       KAFKA_ZOOKEEPER_CONNECT: coupon-zookeeper:2181
     volumes:
