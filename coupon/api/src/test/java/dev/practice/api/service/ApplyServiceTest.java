@@ -51,6 +51,7 @@ class ApplyServiceTest {
      * count 에 대한 race condition test 이다.
      *
      * 동일한 userId 에 대한 race condition 은 해당 프로젝트에서 다루지 않는다.
+     * -> LimitedToOneCouponApplyService.java 에서 다룬다.
      */
     @Test
     void concurrencyTest() throws InterruptedException {

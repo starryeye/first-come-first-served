@@ -21,6 +21,7 @@ public class ApplyService {
          * 문제점
          * 1. 동일한 userId 에 대한 쿠폰 발급이 동시에 일어날 수 있다.
          * -> 해당 프로젝트에서는 다루지 않을 것이다.
+         * -> LimitedToOneCouponApplyService.java 에서 다룬다.
          * 2. 동시에 쿠폰 발급이 대규모로 요청되면 100 개를 초과하는 쿠폰이 발급될 수 있다.
          * -> 해결해보자
          *
