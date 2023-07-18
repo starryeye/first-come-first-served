@@ -21,6 +21,7 @@ public class CouponCreatedConsumer {
      * 쿠폰 발급 처리를 비동기로 처리하고 있기 때문에
      * consumer 가 쿠폰 발급 처리중 장애가 발생해도 producer 는 알지 못하고 발급 성공했다고 처리한다..
      * -> 따라서, 쿠폰 발급에 실패하면 FailedEvent 를 저장한다. 이후, 배치를 통해 발급 재시도를 한다.
+     * TODO: batch retry
      */
     @KafkaListener(topics = "coupon-create", groupId = "group-1")
     public void listener(Long userId) {
