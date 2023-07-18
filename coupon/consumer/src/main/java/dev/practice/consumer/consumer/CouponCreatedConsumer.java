@@ -22,6 +22,7 @@ public class CouponCreatedConsumer {
      * consumer 가 쿠폰 발급 처리중 장애가 발생해도 producer 는 알지 못하고 발급 성공했다고 처리한다..
      * -> 따라서, 쿠폰 발급에 실패하면 FailedEvent 를 저장한다. 이후, 배치를 통해 발급 재시도를 한다.
      * TODO: batch retry
+     * TODO: 쿠폰 발급 이벤트 publish 때, producer 와 broker 간의 장애가 나면 producer 에서 completableFuture 를 사용하여 retry 를 하자.
      */
     @KafkaListener(topics = "coupon-create", groupId = "group-1")
     public void listener(Long userId) {
